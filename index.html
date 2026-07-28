@@ -11,7 +11,7 @@
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="GoPlatinum">
 <meta name="twitter:description" content="Can you go Platinum? Draft 5 years of real first-week album sales and see how your lineup scores.">
-<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cdefs%3E%3CradialGradient id='g' cx='50%25' cy='45%25' r='65%25'%3E%3Cstop offset='0%25' stop-color='%23f5f6f8'/%3E%3Cstop offset='16%25' stop-color='%23c7cad0'/%3E%3Cstop offset='34%25' stop-color='%23eef0f2'/%3E%3Cstop offset='55%25' stop-color='%239096a0'/%3E%3Cstop offset='100%25' stop-color='%23e3e5e8'/%3E%3C/radialGradient%3E%3C/defs%3E%3Ccircle cx='32' cy='32' r='31' fill='url(%23g)' stroke='%236b7078' stroke-width='1'/%3E%3Ccircle cx='32' cy='32' r='28' fill='none' stroke='%235b6068' stroke-width='0.8'/%3E%3Ccircle cx='32' cy='32' r='24.5' fill='none' stroke='%23ffffff' stroke-opacity='0.45' stroke-width='0.8'/%3E%3Ccircle cx='32' cy='32' r='21' fill='none' stroke='%235b6068' stroke-width='0.8'/%3E%3Ccircle cx='32' cy='32' r='17.5' fill='none' stroke='%23ffffff' stroke-opacity='0.45' stroke-width='0.8'/%3E%3Ccircle cx='32' cy='32' r='14' fill='none' stroke='%235b6068' stroke-width='0.8'/%3E%3Ccircle cx='32' cy='32' r='11' fill='%230b0d10'/%3E%3Ccircle cx='32' cy='32' r='11' fill='none' stroke='%23e7eaee' stroke-opacity='0.5' stroke-width='1'/%3E%3Ccircle cx='32' cy='32' r='2.4' fill='%23f5f6f8'/%3E%3C/svg%3E">
+<link rel="icon" type="image/png" href="assets/platinum-vinyl-icon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Anton&family=Space+Mono:wght@400;700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -93,6 +93,8 @@
     width:clamp(24px,5vw,34px);
     height:clamp(24px,5vw,34px);
     flex:none;
+    border-radius:50%;
+    object-fit:cover;
   }
   .brand .tag{
     font-family:'Space Mono',monospace;
@@ -633,12 +635,15 @@
     text-shadow:0 2px 8px rgba(0,0,0,0.55);
   }
   .vinyl.platinum{
-    color:#20242a;
-    background:
-      conic-gradient(from 100deg at 50% 45%, rgba(255,255,255,0.55), rgba(200,204,210,0.15) 25%, rgba(120,126,136,0.35) 50%, rgba(255,255,255,0.4) 75%, rgba(255,255,255,0.55)),
-      radial-gradient(circle at 50% 50%, #f5f6f8 0 14%, #c7cad0 16% 32%, #eef0f2 34% 46%, #9096a0 48% 66%, #e3e5e8 68% 100%);
-    text-shadow:0 1px 0 rgba(255,255,255,0.65), 0 -1px 2px rgba(0,0,0,0.45);
+    color:#eef1f5;
+    background-image:url('assets/platinum-vinyl.png');
+    background-size:cover;
+    background-position:center;
+    text-shadow:0 1px 3px rgba(0,0,0,0.85), 0 0 10px rgba(0,0,0,0.55);
     box-shadow:0 0 60px rgba(220,224,230,0.35), 0 22px 70px rgba(0,0,0,0.36);
+  }
+  .vinyl.platinum::before, .vinyl.platinum::after{
+    content:none;
   }
   .vinyl.gold{
     color:#fff6d4;
@@ -733,7 +738,7 @@
 <div class="stage">
 
   <div class="brand">
-    <h1 onclick="goHome()" role="button" tabindex="0" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();goHome();}" aria-label="GoPlatinum home"><svg class="logo-vinyl" viewBox="0 0 64 64" aria-hidden="true"><defs><radialGradient id="logoVinylGrad" cx="50%" cy="45%" r="65%"><stop offset="0%" stop-color="#f5f6f8"/><stop offset="16%" stop-color="#c7cad0"/><stop offset="34%" stop-color="#eef0f2"/><stop offset="55%" stop-color="#9096a0"/><stop offset="100%" stop-color="#e3e5e8"/></radialGradient></defs><circle cx="32" cy="32" r="31" fill="url(#logoVinylGrad)" stroke="#6b7078" stroke-width="1"/><circle cx="32" cy="32" r="28" fill="none" stroke="#5b6068" stroke-width="0.8"/><circle cx="32" cy="32" r="24.5" fill="none" stroke="#ffffff" stroke-opacity="0.45" stroke-width="0.8"/><circle cx="32" cy="32" r="21" fill="none" stroke="#5b6068" stroke-width="0.8"/><circle cx="32" cy="32" r="17.5" fill="none" stroke="#ffffff" stroke-opacity="0.45" stroke-width="0.8"/><circle cx="32" cy="32" r="14" fill="none" stroke="#5b6068" stroke-width="0.8"/><circle cx="32" cy="32" r="11" fill="#0b0d10"/><circle cx="32" cy="32" r="11" fill="none" stroke="#e7eaee" stroke-opacity="0.5" stroke-width="1"/><circle cx="32" cy="32" r="2.4" fill="#f5f6f8"/></svg>GO<span>PLATINUM</span></h1>
+    <h1 onclick="goHome()" role="button" tabindex="0" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();goHome();}" aria-label="GoPlatinum home"><img class="logo-vinyl" src="assets/platinum-vinyl-icon.png" alt="">GO<span>PLATINUM</span></h1>
     <!-- standalone release: PassTheAux cross-link hidden, not removed
     <a class="parent-link" href="pass_the_aux.html" aria-label="Pass the Aux">
       <img src="assets/pass-the-aux-logo-cropped.png" alt="Pass the Aux">
