@@ -3088,7 +3088,7 @@ function renderStats(stats = loadStats()){
 }
 
 function fmt(n){ return n.toLocaleString('en-US'); }
-function unitsDisplay(entry){ return entry.noSales ? '(no sales)' : fmt(entry.units); }
+function unitsDisplay(entry){ return entry.noSales ? 'no sales' : fmt(entry.units); }
 
 function shuffle(arr){
   const a = arr.slice();
