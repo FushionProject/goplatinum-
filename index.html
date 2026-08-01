@@ -310,6 +310,24 @@
     transition:border-color .12s ease, color .12s ease;
   }
   button.ghost:hover{border-color:var(--bone-dim);color:var(--bone);}
+  button.ghost:disabled{opacity:0.5;cursor:default;}
+  button.ghost:disabled:hover{border-color:var(--line);color:var(--bone-dim);}
+  .daily-panel{
+    text-align:center;
+    margin-bottom:14px;
+    font-family:'Space Mono',monospace;
+  }
+  .daily-streak{
+    font-size:13px;
+    color:var(--platinum);
+    letter-spacing:0.4px;
+    margin-bottom:4px;
+  }
+  .daily-status{
+    font-size:11px;
+    color:var(--bone-dim);
+    letter-spacing:0.3px;
+  }
   .support-link{
     display:block;
     text-align:center;
@@ -715,6 +733,14 @@
     display:grid;
     gap:12px;
   }
+  .share-status{
+    min-height:18px;
+    text-align:center;
+    font-family:'Space Mono',monospace;
+    font-size:11px;
+    color:var(--bone-dim);
+    letter-spacing:0.4px;
+  }
 
   .hidden{display:none !important;}
 
@@ -755,7 +781,7 @@
       <!-- standalone release: original PassTheAux-branded copy hidden, not removed
       <p>Go Platinum is a game by PassTheAux where you roll between 5 different rappers in different years to try and "Go Platinum" in your first week, which is equal to 1 million units. Check out our other features on the PassTheAux site to stay updated on all things Hip-Hop!</p>
       -->
-      <p>Go Platinum is a game where you roll between 5 different rappers in different years to try and "Go Platinum" in your first week, which is equal to 1 million units.</p>
+      <p>Draft the biggest first-week album from 5 random years. Hit 1 million units and you go Platinum.</p>
     </div>
 
     <div class="ticker-wrap">
@@ -766,7 +792,7 @@
       <div><b>01</b> Five rounds. Each one rolls a real year, 2010&ndash;2026.</div>
       <div><b>02</b> Pick the rapper or album whose era would give your lineup the biggest boost.</div>
       <div><b>03</b> Spend two moves total on Respin Year, Respin Lineup, or Peek Sales before you pick.</div>
-      <div><b>04</b> Some rappers had bigger cultural impact than their first-week numbers show &mdash; that's baked into the score. Gold is 500K. Platinum is 1M.</div>
+      <div><b>04</b> Gold is 500K. Platinum is 1M. Some picks score higher than their raw numbers &mdash; figure out why.</div>
     </div>
 
     <div class="start-stats hidden" id="startStats">
@@ -789,7 +815,13 @@
     </details>
     -->
 
+    <div class="daily-panel hidden" id="dailyPanel">
+      <div class="daily-streak" id="dailyStreak"></div>
+      <div class="daily-status" id="dailyStatus"></div>
+    </div>
+
     <button class="cta" onclick="startGame()">START THE DRAFT</button>
+    <button class="ghost" id="dailyBtn" onclick="startDailyChallenge()">DAILY CHALLENGE</button>
     <div class="bottom-links">
       <!-- standalone release: PassTheAux account link hidden, not removed
       <a class="support-link" href="profile.html">Account</a>
@@ -861,7 +893,9 @@
     </div>
 
     <div class="result-actions">
+      <button class="ghost" onclick="shareResult()">SHARE RESULT</button>
       <button class="cta" onclick="restart()">DRAFT AGAIN</button>
+      <div class="share-status" id="shareStatus"></div>
       <div class="bottom-links">
         <!-- standalone release: PassTheAux account link hidden, not removed
         <a class="support-link" href="profile.html">Account</a>
@@ -3032,8 +3066,12 @@ let spinInterval = null;
 let lastResult = null;
 let seenArtistKeys = new Set();
 let peekedThisRound = false;
+let rng = Math.random;
+let isDailyMode = false;
+let dailyDateStr = null;
 
 const STATS_KEY = 'goplatinum_stats_v1';
+const APP_URL = 'goplatinum.app';
 
 function defaultStats(){
   return {
@@ -3099,10 +3137,91 @@ function renderStats(stats = loadStats()){
 function fmt(n){ return n.toLocaleString('en-US'); }
 function unitsDisplay(entry){ return entry.noSales ? 'no sales' : fmt(entry.units); }
 
+// --- Daily Challenge: seeded RNG so every player gets the same board on a given UTC day ---
+
+const DAILY_KEY = 'goplatinum_daily_v1';
+
+function mulberry32(seed){
+  return function(){
+    seed |= 0; seed = (seed + 0x6D2B79F5) | 0;
+    let t = Math.imul(seed ^ (seed >>> 15), 1 | seed);
+    t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+  };
+}
+
+function hashStringToSeed(str){
+  let h = 1779033703 ^ str.length;
+  for(let i=0;i<str.length;i++){
+    h = Math.imul(h ^ str.charCodeAt(i), 3432918353);
+    h = (h << 13) | (h >>> 19);
+  }
+  return (h ^ (h >>> 16)) >>> 0;
+}
+
+function utcDateString(date){
+  return date.getUTCFullYear() + '-' + String(date.getUTCMonth()+1).padStart(2,'0') + '-' + String(date.getUTCDate()).padStart(2,'0');
+}
+
+function todayUTCString(){
+  return utcDateString(new Date());
+}
+
+function isConsecutiveUTCDay(prevDateStr, dateStr){
+  const [py,pm,pd] = prevDateStr.split('-').map(Number);
+  const prev = new Date(Date.UTC(py, pm-1, pd));
+  prev.setUTCDate(prev.getUTCDate()+1);
+  return utcDateString(prev) === dateStr;
+}
+
+function loadDaily(){
+  try{
+    return { streak:0, lastDate:null, lastResult:null, ...JSON.parse(localStorage.getItem(DAILY_KEY) || '{}') };
+  } catch(err){
+    return { streak:0, lastDate:null, lastResult:null };
+  }
+}
+
+function saveDaily(daily){
+  try{ localStorage.setItem(DAILY_KEY, JSON.stringify(daily)); } catch(err){}
+}
+
+function recordDailyCompletion(dateStr, tier, projected){
+  const daily = loadDaily();
+  const streak = daily.lastDate && isConsecutiveUTCDay(daily.lastDate, dateStr) ? daily.streak + 1 : 1;
+  saveDaily({ streak, lastDate: dateStr, lastResult: { tier, projected } });
+  renderDailyPanel();
+}
+
+function renderDailyPanel(){
+  const panel = document.getElementById('dailyPanel');
+  const btn = document.getElementById('dailyBtn');
+  if(!panel || !btn) return;
+
+  const daily = loadDaily();
+  const today = todayUTCString();
+  const streakEl = document.getElementById('dailyStreak');
+  const statusEl = document.getElementById('dailyStatus');
+
+  panel.classList.toggle('hidden', !(daily.streak > 0));
+  streakEl.textContent = daily.streak > 0 ? `\u{1F525} ${daily.streak} day streak` : '';
+
+  if(daily.lastDate === today && daily.lastResult){
+    statusEl.textContent = `Today: ${daily.lastResult.tier} — ${fmt(daily.lastResult.projected)} units. Come back tomorrow.`;
+    btn.disabled = true;
+    btn.textContent = 'COMPLETED TODAY';
+  } else {
+    statusEl.textContent = '';
+    btn.disabled = false;
+    btn.textContent = 'DAILY CHALLENGE';
+  }
+}
+renderDailyPanel();
+
 function shuffle(arr){
   const a = arr.slice();
   for(let i=a.length-1;i>0;i--){
-    const j = Math.floor(Math.random()*(i+1));
+    const j = Math.floor(rng()*(i+1));
     [a[i],a[j]]=[a[j],a[i]];
   }
   return a;
@@ -3151,7 +3270,7 @@ async function loadUpdates(){
 }
 loadUpdates();
 
-function startGame(){
+function beginRound(){
   const years = Object.keys(DATA);
   roundYears = shuffle(years).slice(0,5);
   currentRound = 0;
@@ -3163,6 +3282,26 @@ function startGame(){
   document.getElementById('screen-draft').classList.remove('hidden');
   renderSlots();
   playRound();
+}
+
+function startGame(){
+  rng = Math.random;
+  isDailyMode = false;
+  dailyDateStr = null;
+  beginRound();
+}
+
+function startDailyChallenge(){
+  const today = todayUTCString();
+  const daily = loadDaily();
+  if(daily.lastDate === today){
+    renderDailyPanel();
+    return;
+  }
+  isDailyMode = true;
+  dailyDateStr = today;
+  rng = mulberry32(hashStringToSeed('goplatinum-daily-' + today));
+  beginRound();
 }
 
 function renderSlots(){
@@ -3233,7 +3372,7 @@ function respinYear(){
   respinsLeft--;
   const used = new Set(roundYears);
   const candidates = Object.keys(DATA).filter(y => !used.has(y));
-  const newYear = candidates[Math.floor(Math.random()*candidates.length)];
+  const newYear = candidates[Math.floor(rng()*candidates.length)];
   roundYears[currentRound] = newYear;
   updateRespinUI();
   rollYearAnimation(newYear);
@@ -3294,7 +3433,7 @@ function weightedSampleNoReplace(pool, n){
   const keyed = pool.map(e => {
     const drawUnits = e.noSales ? NOSALES_BASELINE_UNITS : e.units;
     const w = (1 / Math.pow(drawUnits, RARITY_ALPHA)) * artistDrawWeight(e);
-    const u = Math.random();
+    const u = rng();
     return { key: Math.log(u) / w, e };
   });
   keyed.sort((a,b) => b.key - a.key);
@@ -3400,6 +3539,7 @@ function advanceRound(){
 function showResult(){
   document.getElementById('screen-draft').classList.add('hidden');
   document.getElementById('screen-result').classList.remove('hidden');
+  document.getElementById('shareStatus').textContent = '';
 
   const list = document.getElementById('tracklist');
   list.innerHTML = '';
@@ -3448,14 +3588,74 @@ function showResult(){
     tier,
     projected: avg,
     cultureMode,
-    picks: picks.map(p => ({ ...p }))
+    picks: picks.map(p => ({ ...p })),
+    isDaily: isDailyMode,
+    dateStr: dailyDateStr
   };
   renderStats(updateStats(avg, tier, picks));
+  if(isDailyMode){
+    recordDailyCompletion(dailyDateStr, tier, avg);
+  }
+}
+
+function buildShareText(){
+  if(!lastResult) return '';
+
+  if(lastResult.isDaily){
+    return `GoPlatinum Daily ${lastResult.dateStr}: ${lastResult.tier.toUpperCase()} \u{1F4BF} — can you beat me? ${APP_URL}`;
+  }
+
+  const roster = lastResult.picks.map((p, i) => {
+    const feat = p.feat ? ` (with ${p.feat})` : '';
+    return `${i + 1}. ${p.year}: ${p.artist} - ${p.album}${feat} (${unitsDisplay(p)})`;
+  }).join('\n');
+
+  return [
+    `I went ${lastResult.tier.toUpperCase()} in GoPlatinum.`,
+    `Projected first week: ${fmt(lastResult.projected)}`,
+    '',
+    roster,
+    '',
+    `Can you go Platinum? ${APP_URL}`
+  ].join('\n');
+}
+
+async function shareResult(){
+  const status = document.getElementById('shareStatus');
+  const text = buildShareText();
+  if(!text) return;
+
+  try{
+    if(navigator.share){
+      await navigator.share({ title:'GoPlatinum Result', text });
+      status.textContent = 'Shared.';
+      return;
+    }
+    await navigator.clipboard.writeText(text);
+    status.textContent = 'Copied result to clipboard.';
+  } catch(err){
+    if(err && err.name === 'AbortError') return;
+    try{
+      const area = document.createElement('textarea');
+      area.value = text;
+      area.setAttribute('readonly', '');
+      area.style.position = 'fixed';
+      area.style.left = '-9999px';
+      document.body.appendChild(area);
+      area.select();
+      document.execCommand('copy');
+      document.body.removeChild(area);
+      status.textContent = 'Copied result to clipboard.';
+    } catch(fallbackErr){
+      status.textContent = 'Could not copy automatically.';
+    }
+  }
 }
 
 function restart(){
   document.getElementById('screen-result').classList.add('hidden');
   document.getElementById('screen-start').classList.remove('hidden');
+  renderDailyPanel();
 }
 
 function goHome(){
@@ -3467,6 +3667,7 @@ function goHome(){
   document.getElementById('screen-draft').classList.add('hidden');
   document.getElementById('screen-result').classList.add('hidden');
   document.getElementById('screen-start').classList.remove('hidden');
+  renderDailyPanel();
 }
 </script>
 
