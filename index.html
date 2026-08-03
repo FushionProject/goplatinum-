@@ -815,13 +815,15 @@
     </details>
     -->
 
+    <!-- Daily Challenge: hidden until the game has more traction, not removed. Re-enable by uncommenting this block.
     <div class="daily-panel hidden" id="dailyPanel">
       <div class="daily-streak" id="dailyStreak"></div>
       <div class="daily-status" id="dailyStatus"></div>
     </div>
+    -->
 
     <button class="cta" onclick="startGame()">START THE DRAFT</button>
-    <button class="ghost" id="dailyBtn" onclick="startDailyChallenge()">DAILY CHALLENGE</button>
+    <!-- <button class="ghost" id="dailyBtn" onclick="startDailyChallenge()">DAILY CHALLENGE</button> -->
     <div class="bottom-links">
       <!-- standalone release: PassTheAux account link hidden, not removed
       <a class="support-link" href="profile.html">Account</a>
@@ -970,11 +972,6 @@ const DATA = {
       "units": 84000
     },
     {
-      "artist": "Nas & Damian Marley",
-      "album": "Distant Relatives",
-      "units": 57000
-    },
-    {
       "artist": "The Roots",
       "album": "How I Got Over",
       "units": 51000
@@ -997,6 +994,11 @@ const DATA = {
       "units": 0,
       "noSales": true,
       "influence": 2
+    },
+    {
+      "artist": "Nas",
+      "album": "Distant Relatives",
+      "units": 37050
     },
     {
       "artist": "Waka Flocka Flame",
@@ -1023,6 +1025,11 @@ const DATA = {
       "units": 0,
       "noSales": true,
       "influence": 1.5
+    },
+    {
+      "artist": "Damian Marley",
+      "album": "Distant Relatives",
+      "units": 19950
     }
   ],
   "2011": [
@@ -1038,9 +1045,9 @@ const DATA = {
       "influence": 1.5
     },
     {
-      "artist": "Jay-Z & Kanye West",
+      "artist": "Jay-Z",
       "album": "Watch the Throne",
-      "units": 436000,
+      "units": 239800,
       "influence": 1.5
     },
     {
@@ -1062,6 +1069,12 @@ const DATA = {
       "artist": "Wiz Khalifa",
       "album": "Rolling Papers",
       "units": 197000
+    },
+    {
+      "artist": "Kanye West",
+      "album": "Watch the Throne",
+      "units": 196200,
+      "influence": 1.5
     },
     {
       "artist": "Bad Meets Evil",
@@ -1425,14 +1438,19 @@ const DATA = {
       "influence": 2
     },
     {
-      "artist": "Freddie Gibbs & Madlib",
-      "album": "Piñata",
-      "units": 13000
-    },
-    {
       "artist": "Run the Jewels",
       "album": "Run the Jewels 2",
       "units": 12000
+    },
+    {
+      "artist": "Madlib",
+      "album": "Piñata",
+      "units": 7150
+    },
+    {
+      "artist": "Freddie Gibbs",
+      "album": "Piñata",
+      "units": 5850
     }
   ],
   "2015": [
@@ -1440,12 +1458,6 @@ const DATA = {
       "artist": "Drake",
       "album": "If You're Reading This It's Too Late",
       "units": 535000,
-      "influence": 1.5
-    },
-    {
-      "artist": "Drake & Future",
-      "album": "What a Time to Be Alive",
-      "units": 375000,
       "influence": 1.5
     },
     {
@@ -1458,6 +1470,12 @@ const DATA = {
       "artist": "Dr. Dre",
       "album": "Compton",
       "units": 295000
+    },
+    {
+      "artist": "Drake",
+      "album": "What a Time to Be Alive",
+      "units": 262500,
+      "influence": 1.5
     },
     {
       "artist": "Meek Mill",
@@ -1494,6 +1512,12 @@ const DATA = {
       "artist": "Fetty Wap",
       "album": "Fetty Wap",
       "units": 130000
+    },
+    {
+      "artist": "Future",
+      "album": "What a Time to Be Alive",
+      "units": 112500,
+      "influence": 1.5
     },
     {
       "artist": "Travis Scott",
@@ -1647,13 +1671,6 @@ const DATA = {
       "influence": 2
     },
     {
-      "artist": "21 Savage & Metro Boomin",
-      "album": "Savage Mode",
-      "units": 0,
-      "noSales": true,
-      "influence": 2
-    },
-    {
       "artist": "Chance the Rapper",
       "album": "Coloring Book",
       "units": 0,
@@ -1670,6 +1687,20 @@ const DATA = {
     {
       "artist": "Lil Yachty",
       "album": "Lil Boat",
+      "units": 0,
+      "noSales": true,
+      "influence": 2
+    },
+    {
+      "artist": "Metro Boomin",
+      "album": "Savage Mode",
+      "units": 0,
+      "noSales": true,
+      "influence": 2
+    },
+    {
+      "artist": "21 Savage",
+      "album": "Savage Mode",
       "units": 0,
       "noSales": true,
       "influence": 2
@@ -2316,25 +2347,14 @@ const DATA = {
       "influence": 1.5
     },
     {
-      "artist": "21 Savage & Metro Boomin",
-      "album": "Savage Mode II",
-      "units": 171000
-    },
-    {
-      "artist": "JackBoys & Travis Scott",
-      "album": "JackBoys",
-      "units": 154000
-    },
-    {
       "artist": "Mac Miller",
       "album": "Circles",
       "units": 164000
     },
     {
-      "artist": "Playboi Carti",
-      "album": "Whole Lotta Red",
-      "units": 100000,
-      "influence": 8
+      "artist": "JackBoys & Travis Scott",
+      "album": "JackBoys",
+      "units": 154000
     },
     {
       "artist": "Future",
@@ -2357,9 +2377,25 @@ const DATA = {
       "units": 103000
     },
     {
+      "artist": "Playboi Carti",
+      "album": "Whole Lotta Red",
+      "units": 100000,
+      "influence": 8
+    },
+    {
       "artist": "Polo G",
       "album": "THE GOAT",
       "units": 97000
+    },
+    {
+      "artist": "21 Savage",
+      "album": "Savage Mode II",
+      "units": 94050
+    },
+    {
+      "artist": "Metro Boomin",
+      "album": "Savage Mode II",
+      "units": 76950
     },
     {
       "artist": "Trippie Redd",
@@ -2416,11 +2452,6 @@ const DATA = {
       "units": 169000
     },
     {
-      "artist": "Lil Baby & Lil Durk",
-      "album": "The Voice of the Heroes",
-      "units": 150000
-    },
-    {
       "artist": "Polo G",
       "album": "Hall of Fame",
       "units": 143000
@@ -2444,11 +2475,6 @@ const DATA = {
       "artist": "Lil Nas X",
       "album": "Montero",
       "units": 126000
-    },
-    {
-      "artist": "Young Thug & Gunna",
-      "album": "Slime Language 2",
-      "units": 113000
     },
     {
       "artist": "Moneybagg Yo",
@@ -2486,14 +2512,34 @@ const DATA = {
       "units": 88000
     },
     {
+      "artist": "Lil Baby",
+      "album": "The Voice of the Heroes",
+      "units": 82500
+    },
+    {
       "artist": "Trippie Redd",
       "album": "Trip at Knight",
       "units": 81000
     },
     {
+      "artist": "Young Thug",
+      "album": "Slime Language 2",
+      "units": 67800
+    },
+    {
+      "artist": "Lil Durk",
+      "album": "The Voice of the Heroes",
+      "units": 67500
+    },
+    {
       "artist": "Lil Tjay",
       "album": "Destined 2 Win",
       "units": 62000
+    },
+    {
+      "artist": "Gunna",
+      "album": "Slime Language 2",
+      "units": 45200
     }
   ],
   "2022": [
@@ -2747,20 +2793,26 @@ const DATA = {
       "units": 281000
     },
     {
-      "artist": "Future & Metro Boomin",
+      "artist": "Kanye West",
+      "album": "Vultures 1",
+      "units": 148000
+    },
+    {
+      "artist": "Ty Dolla $ign",
+      "album": "Vultures 1",
+      "units": 148000,
+      "feat": "Kanye West"
+    },
+    {
+      "artist": "Future",
       "album": "We Don't Trust You",
-      "units": 251000,
+      "units": 138050,
       "influence": 1.5
     },
     {
       "artist": "21 Savage",
       "album": "American Dream",
       "units": 133000
-    },
-    {
-      "artist": "Future & Metro Boomin",
-      "album": "We Still Don't Trust You",
-      "units": 127500
     },
     {
       "artist": "Rod Wave",
@@ -2771,6 +2823,28 @@ const DATA = {
       "artist": "J. Cole",
       "album": "Might Delete Later",
       "units": 115000
+    },
+    {
+      "artist": "Metro Boomin",
+      "album": "We Don't Trust You",
+      "units": 112950,
+      "influence": 1.5
+    },
+    {
+      "artist": "Kanye West",
+      "album": "Vultures 2",
+      "units": 107000
+    },
+    {
+      "artist": "Ty Dolla $ign",
+      "album": "Vultures 2",
+      "units": 107000,
+      "feat": "Kanye West"
+    },
+    {
+      "artist": "Future",
+      "album": "We Still Don't Trust You",
+      "units": 70125
     },
     {
       "artist": "Yeat",
@@ -2793,9 +2867,9 @@ const DATA = {
       "units": 59000
     },
     {
-      "artist": "Snoop Dogg & Dr. Dre",
-      "album": "Missionary",
-      "units": 36000
+      "artist": "Metro Boomin",
+      "album": "We Still Don't Trust You",
+      "units": 57375
     },
     {
       "artist": "Childish Gambino",
@@ -2813,26 +2887,14 @@ const DATA = {
       "units": 23000
     },
     {
-      "artist": "Kanye West",
-      "album": "Vultures 1",
-      "units": 148000
+      "artist": "Dr. Dre",
+      "album": "Missionary",
+      "units": 18000
     },
     {
-      "artist": "Ty Dolla $ign",
-      "album": "Vultures 1",
-      "units": 148000,
-      "feat": "Kanye West"
-    },
-    {
-      "artist": "Kanye West",
-      "album": "Vultures 2",
-      "units": 107000
-    },
-    {
-      "artist": "Ty Dolla $ign",
-      "album": "Vultures 2",
-      "units": 107000,
-      "feat": "Kanye West"
+      "artist": "Snoop Dogg",
+      "album": "Missionary",
+      "units": 18000
     }
   ],
   "2025": [
@@ -2843,11 +2905,6 @@ const DATA = {
       "influence": 1.5
     },
     {
-      "artist": "PartyNextDoor & Drake",
-      "album": "$ome $exy $ongs 4 U",
-      "units": 246000
-    },
-    {
       "artist": "Travis Scott & JACKBOYS",
       "album": "JACKBOYS 2",
       "units": 232000
@@ -2856,6 +2913,11 @@ const DATA = {
       "artist": "Tyler, The Creator",
       "album": "Don't Tap the Glass",
       "units": 197000
+    },
+    {
+      "artist": "Drake",
+      "album": "$ome $exy $ongs 4 U",
+      "units": 172200
     },
     {
       "artist": "Lil Baby",
@@ -2883,6 +2945,11 @@ const DATA = {
       "units": 80000
     },
     {
+      "artist": "PARTYNEXTDOOR",
+      "album": "$ome $exy $ongs 4 U",
+      "units": 73800
+    },
+    {
       "artist": "21 Savage",
       "album": "What Happened to the Streets?",
       "units": 73000
@@ -2904,11 +2971,6 @@ const DATA = {
       "units": 37000
     },
     {
-      "artist": "Freddie Gibbs & The Alchemist",
-      "album": "ALFREDO 2",
-      "units": 37000
-    },
-    {
       "artist": "Yeat",
       "album": "Dangerous Summer",
       "units": 34000
@@ -2917,6 +2979,16 @@ const DATA = {
       "artist": "Offset",
       "album": "KIARI",
       "units": 29000
+    },
+    {
+      "artist": "Freddie Gibbs",
+      "album": "ALFREDO 2",
+      "units": 20350
+    },
+    {
+      "artist": "The Alchemist",
+      "album": "ALFREDO 2",
+      "units": 16650
     },
     {
       "artist": "OsamaSon",
